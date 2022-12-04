@@ -11,4 +11,4 @@ regex = "1"
 
 [[bin]]
 name = "advent_of_code_2022"
-path = "src/day_3/main.rs"
+path = "src/day_4/main.rs"
