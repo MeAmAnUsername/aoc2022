@@ -16,7 +16,7 @@ use nom::Parser;
 const INPUT: &str = include_str!("input.txt");
 
 fn main() {
-    println!("Solution: {}", solve_part1(INPUT));
+    println!("Solution: {}", solve_part2(INPUT));
 }
 
 #[derive(Debug)]
@@ -63,6 +63,24 @@ impl Stacks {
             let to = &mut self.stacks[command.to - 1];
             to.push(crate_name);
         }
+        // println!(
+        //     "Move {} from {} to {}: {:#?}",
+        //     command.count, command.from, command.to, &self.stacks,
+        // )
+    }
+
+    fn apply_commands2(&mut self, commands: Vec<Command>) {
+        for command in commands {
+            self.apply_command2(command);
+        }
+    }
+
+    fn apply_command2(&mut self, command: Command) {
+        let from = &mut self.stacks[command.from - 1];
+        let mut moved: Vec<char> = from.drain(from.len() - command.count..).collect();
+        let to = &mut self.stacks[command.to - 1];
+        to.append(&mut moved);
+
         // println!(
         //     "Move {} from {} to {}: {:#?}",
         //     command.count, command.from, command.to, &self.stacks,
@@ -151,6 +169,17 @@ fn solve_part1(input: &str) -> String {
         .collect()
 }
 
+// answer part 2: WJVRLSJJT
+fn solve_part2(input: &str) -> String {
+    let (mut stacks, commands) = parse(input).expect("Parsing failed");
+    stacks.apply_commands2(commands);
+    stacks
+        .get_top_crates()
+        .iter()
+        .map(|crate_maybe| crate_maybe.expect("Stack was empty"))
+        .collect()
+}
+
 #[test]
 fn example_part1() {
     const INPUT: &str = "    [D]    
@@ -164,4 +193,19 @@ move 2 from 2 to 1
 move 1 from 1 to 2";
 
     assert_eq!("CMZ", solve_part1(INPUT))
+}
+
+#[test]
+fn example_part2() {
+    const INPUT: &str = "    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2";
+
+    assert_eq!("MCD", solve_part2(INPUT))
 }
