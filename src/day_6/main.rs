@@ -17,8 +17,8 @@ pub fn solve_part1(input: &str) -> usize {
         .nth(0)
         .expect("No window with only unique elements found")
         .0
-        + 3
-        + 1 // first window already contains 3 characters, +1 for 1 based counting
+        + 3 // first 3 characters do not form a complete window yet
+        + 1 // 1 based counting instead of 0 based indexing
 }
 
 #[cfg(test)]
